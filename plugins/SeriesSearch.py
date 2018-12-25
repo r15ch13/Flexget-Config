@@ -13,6 +13,7 @@ LANGUAGE = ['english', 'german']
 
 DEFAULT_LANG = 'german'
 DEFAULT_HOST = 'shareonline'
+DEFAULT_PACK = False
 
 class SearchSerienjunkies(BaseSearchPlugin):
 
@@ -84,8 +85,13 @@ class SearchSerienjunkies(BaseSearchPlugin):
                 return SearchResultEntry(title=target.strong.text, links=[a['href']], size=filesize)
 
     def parse_result_entry(self, entry_page):
-    
-        se = '\.' + self.se + '\.' ## if se = S01 or 01 dont match with Staffelpack Demo.S01E99.German.Dubstepped.DL.EbayHD.x264-VHS
+        if self.config['staffelpack'] == True:
+            se = re.findall('((E|x)[\d]+)$',self.se)[0][0]
+            se = re.sub(se,'', self.se).strip()
+            se = '\.' + se + '\.'
+        else:
+            ## if se = S01 or 01 dont match with Staffelpack Demo.S01E99.German.Dubstepped.DL.EbayHD.x264-VHS
+            se = '\.' + self.se + '\.'
         english = self.config['language'] == 'english'
 
         entries = []

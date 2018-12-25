@@ -158,6 +158,7 @@ templates:
         - searchSerienjunkies:
             hoster: '{? Settings.Hoster ?}'
             language: '{? Settings.Language ?}'
+            staffelpack: true
     no_entries_ok: yes
 
   Discover-disable-Backfill:
