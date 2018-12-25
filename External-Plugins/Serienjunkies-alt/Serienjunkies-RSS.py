@@ -27,7 +27,7 @@ def range_checkr(link, title, language):
                 title1 = title_cut[0][0] + "0" + str(count) + ".*" + title_cut[0][-1]
                 range_parse(link, title1, language)
     else:
-        parse_download(link, title, language) 
+        parse_download(link, title, language)
 
 def range_parse(series_url, search_title, language):
     req_page = requests.get(series_url).text

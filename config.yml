@@ -26,7 +26,7 @@ templates:
     manipulate:
     ## Fixes for SerienJ...s.org
       - title:
-          replace:            
+          replace:
             regexp: '.(Deutsch|Englisch).'
             format: ''
       - title:
@@ -65,7 +65,7 @@ templates:
       # Video
         - \b((hd|)ts|telesync)\b   # Bad-Quality
         - \b((hd|)cam)\b   # Bad-Quality
-        - \brucke([^\s]+)\b # ruckel/ruckeln/ruckelt/ruckelig ## German for "lagging", Bad-Quality 
+        - \brucke([^\s]+)\b # ruckel/ruckeln/ruckelt/ruckelig ## German for "lagging", Bad-Quality
         - \b(bd|dvd|)scr(\b|eener)\b   # BD- / DVD- / SCR(EENER)
         - \br(5|6)\b   # R5/6 (Region Release: Asia & East-Europe - usually bad Quality)
         - \b(un|)sub(|s|bed)\b # Subtitles (Sub / Subs / Subbed / Unsubbed)
@@ -97,7 +97,7 @@ templates:
     thetvdb_lookup:
       language: de
     trakt_lookup:
-      account: '{? trakt.acc ?}' 
+      account: '{? trakt.acc ?}'
     set:
       tvdb_language: de
     manipulate:
@@ -139,7 +139,7 @@ templates:
       - rss: '{? flexget.path ?}/External-Plugins/Serienjunkies-Feed/rss_feed_7.xml'
       - rss: '{? flexget.path ?}/External-Plugins/Serienjunkies-Feed/rss_feed_8.xml'
       - rss: '{? flexget.path ?}/External-Plugins/Serienjunkies-Feed/rss_feed_9.xml'
-      
+
 
   ######################################## Enable/Disable Discover
   Discover-enable-Backfill:
@@ -182,11 +182,11 @@ templates:
       settings:
         target: '{? quality.main ?}'
         quality: '{? quality.low ?}'
-        propers: 2 weeks        
+        propers: 2 weeks
         timeframe: 24 hours
         identified_by: ep
         tracking: '{? series.tracking ?}'
-        upgrade: yes 
+        upgrade: yes
         season_packs: yes
       from:
         trakt_list:
@@ -203,7 +203,7 @@ templates:
       settings:
         target: '{? quality.main ?}'
         quality: '{? quality.low ?}'
-        propers: 2 weeks        
+        propers: 2 weeks
         timeframe: 24 hours
         identified_by: ep
         tracking: '{? series.tracking ?}'
@@ -233,59 +233,59 @@ templates:
   enable-Download_Second_IMDb_Movies:
     manual: no
   disable-Download_Second_IMDb_Movies:
-    manual: yes    
+    manual: yes
 
   enable-Sync_Main_IMDb_to_Second:
     manual: no
   disable-Sync_Main_IMDb_to_Second:
-    manual: yes  
+    manual: yes
 
   enable-Studio_Downloads:
     manual: no
   disable-Studio_Downloads:
-    manual: yes 
+    manual: yes
 
   enable-Download_Best_on_IMDb:
     manual: no
   disable-Download_Best_on_IMDb:
-    manual: yes 
-
-  enable-YouTube_Downloads: 
-    manual: no
-  disable-YouTube_Downloads: 
     manual: yes
 
-  enable-Download_Specials: 
+  enable-YouTube_Downloads:
+    manual: no
+  disable-YouTube_Downloads:
+    manual: yes
+
+  enable-Download_Specials:
     include: Specials.yml
-  disable-Download_Specials: 
-    manual: yes
-    
-  enable-Download_Specials2: 
-    include: Specials2.yml
-  disable-Download_Specials2: 
-    manual: yes
-    
-  enable-Download_Sports: 
-    manual: no
-  disable-Download_Sports: 
+  disable-Download_Specials:
     manual: yes
 
-  enable-Download_3D: 
+  enable-Download_Specials2:
+    include: Specials2.yml
+  disable-Download_Specials2:
+    manual: yes
+
+  enable-Download_Sports:
+    manual: no
+  disable-Download_Sports:
+    manual: yes
+
+  enable-Download_3D:
     manual: no
   disable-Download_3D:
     manual: yes
 
-  enable-Download_eBooks: 
+  enable-Download_eBooks:
     include: eBooks.yml
   disable-Download_eBooks:
     manual: yes
 
-  enable-Download_Christmas: 
+  enable-Download_Christmas:
     manual: no
   disable-Download_Christmas:
     manual: yes
 
-  enable-IMDb_Persons: 
+  enable-IMDb_Persons:
     include: Persons.yml
   disable-IMDb_Persons:
     exec:
@@ -505,11 +505,11 @@ tasks:
     no_entries_ok: yes
     exec:
       on_start:
-        phase: 
+        phase:
           - "cd {? flexget.path ?}/External-Plugins/HDArea-Feed/ && rm *.xml; python ./HDAreaOrg-RSS.py"
           - "cd {? flexget.path ?}/External-Plugins/HDWorld-Movies-Feed/ && rm *.xml; python ./HDWorld-Movies-RSS.py"
           - "cd {? flexget.path ?}/External-Plugins/HDWorld-Series-Feed/ && rm *.xml; python ./HDWorld-Series-RSS.py"
-          - "cd {? flexget.path ?}/External-Plugins/Serienjunkies-Feed/ && rm *.xml; python ./Serienjunkies-RSS.py"          
+          - "cd {? flexget.path ?}/External-Plugins/Serienjunkies-Feed/ && rm *.xml; python ./Serienjunkies-RSS.py"
 
   ######################################## Get imdb watchlist
   ## imdb API (used by imdb_list-plugin) is now restricted to 250 entries - everything above results in error
@@ -523,12 +523,12 @@ tasks:
     no_entries_ok: yes
     exec:
       on_start:
-        phase: 
+        phase:
           - "mkdir {? filesystem.htmlpath ?}/{? imdb.listID1 ?}/; cd {? filesystem.htmlpath ?}/{? imdb.listID1 ?}/ && rm WATCHLIST.csv; wget http://www.imdb.com/list/{? imdb.listID1 ?}/export && mv ./export ./WATCHLIST.csv; chmod +x *"
           - "mkdir {? filesystem.htmlpath ?}/{? imdb.listID2 ?}/; cd {? filesystem.htmlpath ?}/{? imdb.listID2 ?}/ && rm WATCHLIST.csv; wget http://www.imdb.com/list/{? imdb.listID2 ?}/export && mv ./export ./WATCHLIST.csv; chmod +x *"
           - "mkdir {? filesystem.htmlpath ?}/{? imdb.listID3 ?}/; cd {? filesystem.htmlpath ?}/{? imdb.listID3 ?}/ && rm WATCHLIST.csv; wget http://www.imdb.com/list/{? imdb.listID3 ?}/export && mv ./export ./WATCHLIST.csv; chmod +x *"
           - echo "Download IMDb Watchlists successful"
-        
+
   ######################################## Sync Trakt/IMDb Movie-Watchlist to Flexget-Queue
   ## imdb API (used by imdb_list-plugin) is now restricted to 250 entries - everything above results in error
   ## CSV workaround:
@@ -603,7 +603,7 @@ tasks:
       list: collection
       strip_dates: yes
     accept_all: yes
-    set_series_begin: yes   
+    set_series_begin: yes
 
    ######################################## Fill Favorites
   Update_Movie_Favorites:
@@ -612,7 +612,7 @@ tasks:
       - no_seen
       - no_global
     trakt_lookup:
-      account: '{? trakt.acc ?}'   
+      account: '{? trakt.acc ?}'
     trakt_list:
       account: '{? trakt.acc ?}'
       list: collection
@@ -718,7 +718,7 @@ tasks:
     if:
       - trakt_ep_id > 'S01E{? series.Start_Collection_counter ?}': accept
     list_remove:
-      - trakt_list:    
+      - trakt_list:
           account: '{? trakt.acc ?}'
           list: '{? trakt.OnHold ?}'
           type: shows
@@ -872,7 +872,7 @@ tasks:
         - trakt_list:
             account: '{? trakt.acc ?}'
             list: '{? trakt.Favorite_List ?}'
-            type: movies      
+            type: movies
       fields:
         - imdb_id
       action: reject
@@ -880,13 +880,13 @@ tasks:
       reject:
         - \b3D\b
     include: Movie_Size_Low.yml
-            
+
   ######################################## 3D
   Movies_3D_Stream:
     proper_movies: yes  #accept Quality-fixes (Proper means there was a bug in the release before)
     priority: 3
     template:
-      - '{? disable_enable_tasks.Download_3D ?}-Download_3D'    
+      - '{? disable_enable_tasks.Download_3D ?}-Download_3D'
       - '{? DownloadManager ?}-Defaults'
       - '{? DownloadManager ?}-{? DownloadManagerQueue ?}-Queue'
       - '{? DownloadManager ?}-3D'
@@ -900,7 +900,7 @@ tasks:
         - trakt_list:
             account: '{? trakt.acc ?}'
             list: collection
-            type: movies  
+            type: movies
       remove_on_match: no
       single_match: yes
     regexp:
@@ -936,7 +936,7 @@ tasks:
 #       - not imdb_languages or not 'english' in imdb_languages: reject
 #       - 'german' in imdb_languages: reject
 #   ######################################## 10 Star Rating = high quality
- 
+
   Movies_10Star_HighQuality_Search:
     priority: 6
     seen: local
@@ -991,7 +991,7 @@ tasks:
       fields:
         - imdb_id
       action: reject
-    if:     
+    if:
       - trakt_series_status == 'canceled': reject
     list_match:
       from:
@@ -1023,7 +1023,7 @@ tasks:
       fields:
         - imdb_id
       action: reject
-    if:     
+    if:
       - trakt_series_status == 'canceled': reject
   ######################################## Based on Series-Collection "English"
 
@@ -1059,12 +1059,12 @@ tasks:
       - trakt_list:
           account: '{? trakt.acc ?}'
           list: '{? trakt.English.Series ?}'
-          type: episodes    
+          type: episodes
 #    if:
 #      - trakt_languages == ['german']: reject
 #      - imdb_languages == ['german']: reject
   ######################################## Watchlist-Premieres | Needs work for: Prefer DE, otherwise EN
-  ################################## What it does: Download Episode 1-3 and add to custom trakt-OnHold-List 
+  ################################## What it does: Download Episode 1-3 and add to custom trakt-OnHold-List
   Series_Watchlist:
     plugin_priority:
       regexp: 250
@@ -1096,7 +1096,7 @@ tasks:
     regexp:
       reject_excluding:
         - \bS01(.E0|E0)('{? series.Stop_watchlist_counter ?}')\b  # counter has to be set in options.yml
-    if:     
+    if:
       - trakt_series_status == 'canceled': reject
 ############################################################################################################ YouTube ############################################################################################################
   YouTube-Personal-Playlist:
@@ -1123,7 +1123,7 @@ tasks:
         - Golden.State.Warriors
         - New.York.Knicks
     template:
-      - '{? disable_enable_tasks.Download_Sports ?}-Download_Sports'    
+      - '{? disable_enable_tasks.Download_Sports ?}-Download_Sports'
       - '{? DownloadManager ?}-Defaults'
       - '{? DownloadManager ?}-Sports'
       - no_global
@@ -1142,7 +1142,7 @@ tasks:
 #     template:
 #       - no_global
 #       - '{? disable_enable_tasks.Studio_Downloads ?}-Studio_Downloads'
-#     from_imdb: 
+#     from_imdb:
 #       content_types: movie
 #       id:
 #         # Best Animation Studios
@@ -1180,7 +1180,7 @@ tasks:
       - '{? DownloadManager ?}-{? DownloadManagerQueue ?}-Queue'
 #      - '{? disable_enable_tasks.Download_Best_on_IMDb ?}-Download_Best_on_IMDb'
       - movies_lookup
-      - German 
+      - German
       - Movie_Streams
     quality: '{? quality.main ?}'
     imdb:
@@ -1220,14 +1220,14 @@ tasks:
   Specials2: #(Third IMDB-User Task - not supported)
     template:
       - no_global
-      - no_seen     
+      - no_seen
       - '{? disable_enable_tasks.Download_Specials2 ?}-Download_Specials2'
     priority: 10
  #   include: Specials2.yml
 
 
   ######################################## eBooks
-# 
+#
 #   eBooks:
 #     template:
 #       - no_global
@@ -1238,12 +1238,12 @@ tasks:
 ##     include: eBooks.yml
 #     rss: https://scenefiles.to/RSS-Ebooks-German?results=filecrypt&filter=1k
 #     seen: local
-# 
-# 
-# 
+#
+#
+#
 #   Sync_Christmas_Movies:
 #     interval: 9 weeks
-#     template: 
+#     template:
 #       - no_global
 #       - no_seen
 #     priority: 8
@@ -1258,7 +1258,7 @@ tasks:
 #           account: '{? trakt.acc ?}'
 #           list: Christmas
 #           type: movies
-#       
+#
 
 ###############################################################################################################################################
 ## MISC ################################################################################################config#by#snickers2k###################

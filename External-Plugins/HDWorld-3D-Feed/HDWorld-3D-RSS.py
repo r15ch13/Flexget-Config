@@ -1,5 +1,5 @@
 import feedparser, re, urllib2, requests
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 
 hoster = "share-online"             # uploaded;uplaoded;oboom;cloudzer;filemonkey
 outputFilename = "HDWorld.xml"   # wo soll die rss-datei gespeichert werden ?

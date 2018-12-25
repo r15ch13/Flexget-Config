@@ -1,5 +1,5 @@
 import feedparser, re, urllib2, requests
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 
 quality = "720"
 hoster = "uploaded"             # uploaded;uplaoded;oboom;cloudzer;filemonkey

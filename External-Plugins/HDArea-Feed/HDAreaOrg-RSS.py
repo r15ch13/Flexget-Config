@@ -1,5 +1,5 @@
 import feedparser, re, urllib2, requests
-from BeautifulSoup import BeautifulSoup 
+from BeautifulSoup import BeautifulSoup
 
 quality = "720p"
 hoster = "uploaded"             # uploaded;uplaoded;oboom;cloudzer;filemonkey
@@ -65,7 +65,7 @@ def get_year(soup1, dlLink, rls_title):
         print title+" ("+year+")"
         print dlLink+"\n"
         make_rss(title,dlLink)
-    
+
 for site in ('top-rls','movies','Old_Stuff','Cinedubs'): #
     address = ('http://hd-area.org/index.php?s=' + site)
     page = urllib2.urlopen(address).read()

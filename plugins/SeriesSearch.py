@@ -24,7 +24,7 @@ class SearchSerienjunkies(BaseSearchPlugin):
         },
         'additionalProperties': True
     }
-    
+
     """
         Serienjunkies search plugin.
     """
@@ -32,27 +32,28 @@ class SearchSerienjunkies(BaseSearchPlugin):
     query_url = 'http://serienjunkies.org/media/ajax/search/search.php'
     query_param_name = "string"
     static_link = "http://serienjunkies.org/?cat="
-    
+
     EXCLUDES = {"Dauer:", "Download:", "Uploader:", "Größe:", "Tonhöhe:", "Sprache:", "Format:", "HQ-Cover:"}
-    
+
     def init(self):
         self.log = logging.getLogger(self.name)
         self.config.setdefault('hoster', DEFAULT_HOST)
         self.config.setdefault('language', DEFAULT_LANG)
-    
-    def do_search(self, search_string):       
+        self.config.setdefault('staffelpack', DEFAULT_PACK)
+
+    def do_search(self, search_string):
         return self.get_url_content(self.query_url, params={self.query_param_name:search_string}, method = "POST", json = True)
-        
+
     def prepare_search_query(self, search_string):
         query = normalize_unicode(search_string)
         se = re.findall('((((|S)[\d]+(E|x)[\d]+)|(|S)[\d]+))$',query)[0][0]
         query = re.sub(se,'',query).strip()
-        
+
         self.se = se
         self.query = query
-        
+
         return query
-        
+
     def parse_results_page(self, results):
 
         series_url = ''
@@ -60,7 +61,7 @@ class SearchSerienjunkies(BaseSearchPlugin):
         for r in results:
             ## unescape HTML-Entities eg: &auml; -> ä
             serienjunkies_name = HTMLParser.HTMLParser().unescape(r[1])
-            
+
             ## workaround for SJ inconsistent naming
             ## - strip all non \w-chars, it strips numbers as well, but it should doesnt matter
             ## eg: You’re the Worst -> YouretheWorst, in serienjunkies search it is Youre the Worst -> YouretheWorst, so it will match.
@@ -74,19 +75,19 @@ class SearchSerienjunkies(BaseSearchPlugin):
                 break
 
         return result_entries
-    
+
     def parse_entry(self, target, filesize):
         for hoster in self.get_hoster_variants():
             r = target.find(text=re.compile(hoster))
             if r is not None:
                 a = r.find_previous_sibling('a')
                 return SearchResultEntry(title=target.strong.text, links=[a['href']], size=filesize)
-    
+
     def parse_result_entry(self, entry_page):
     
         se = '\.' + self.se + '\.' ## if se = S01 or 01 dont match with Staffelpack Demo.S01E99.German.Dubstepped.DL.EbayHD.x264-VHS
         english = self.config['language'] == 'english'
-    
+
         entries = []
         search_result_entries = []
         filesize = 0
@@ -100,31 +101,31 @@ class SearchSerienjunkies(BaseSearchPlugin):
                         search_result_entries.append(self.parse_entry(p, filesize))
             elif(p.find("strong", text="Größe:")):
                 size = p.find("strong", text="Größe:").next_sibling
-                
+
                 ## experimental
                 size = re.sub(' +',' ',size) # remove multiple whitespaces
                 size = size.replace("|","").strip() # remove | and strip whitespaces
                 size = re.findall('([\d]+ [\w]+)',size)
                 if len(size) > 0:
                     filesize = parse_filesize(size[0])
-                
+
         ## check for more result pages
         next_link = entry_page.find("a", text="»")
         if next_link:
             next_page = self.get_url_content(next_link['href'])
             search_result_entries.extend(self.parse_result_entry(next_page))
-        
+
         return [x for x in search_result_entries if x is not None]
 
 @event('plugin.register')
 def register_plugin():
     plugin.register(SearchSerienjunkies, 'searchSerienjunkies', groups=['search'], api_ver=2)
-    
+
 class SearchDokujunkies(SearchSerienjunkies):
     name = "searchDokujunkies"
     query_url = "http://dokujunkies.org/media/search.php"
     static_link = "http://dokujunkies.org/?p="
-    
+
     def parse_results_page(self, results):
 
         series_url = ''
@@ -143,7 +144,7 @@ class SearchDokujunkies(SearchSerienjunkies):
                 break
 
         return result_entries
-    
+
 @event('plugin.register')
 def register_plugin():
     plugin.register(SearchDokujunkies, 'searchDokujunkies', groups=['search'], api_ver=2)

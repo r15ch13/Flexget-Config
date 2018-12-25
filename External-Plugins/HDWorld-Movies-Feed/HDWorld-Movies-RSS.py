@@ -1,5 +1,5 @@
 import feedparser, re, urllib2, requests
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 
 hoster = "uploaded"             # uploaded;uplaoded;oboom;cloudzer;filemonkey
 outputFilename = "HDWorld.xml"   # wo soll die rss-datei gespeichert werden ?
@@ -78,7 +78,7 @@ for site in ('1','2','3','4','5','6','7','8','9'):
                 lnk = links["href"]
                 print lnk
                 make_rss(title, lnk)
-                
+
 # Schreibe RSS footer
 outputFile.write("</channel>\n")
 outputFile.write("</rss>")
