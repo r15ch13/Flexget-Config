@@ -4,7 +4,8 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
 # Einstellungen:
-sites = ('neues', 'top-rls', 'movies', 'Old_Stuff', 'Cinedubs')
+quality = ["720p", "1080p"]
+sites = ["neues", "top-rls", "movies", "Old_Stuff", "Cinedubs"]
 hoster = ["share online", "uploaded"]
 rssname = "HDArea.xml"
 
@@ -20,32 +21,61 @@ rss.write("<description>Hd-area.org RSS Generator for Flexget</description>\n")
 rss.write("<link>Hd-area.org</link>\n")
 rss.write("<ttl> </ttl>\n")
 
-def make_rss(title, link):
+def make_rss(guid, title, link):
     rss.write("<item>\n")
+    rss.write("<guid>"+guid+"</guid>\n")
     rss.write("<title>"+title+"</title>\n")
     rss.write("<link>"+link+"</link>\n")
     rss.write("</item>\n")
 
-def fetch_releases(site):
-    address = ('https://hd-area.org/index.php?s=' + site)
-    page = urlopen(address).read()
+def replace_umlauts(title):
+    title = title.replace(chr(228), "ae").replace(chr(196), "Ae")
+    title = title.replace(chr(252), "ue").replace(chr(220), "Ue")
+    title = title.replace(chr(246), "oe").replace(chr(214), "Oe")
+    title = title.replace(chr(223), "ss")
+    title = title.replace('&amp;', "&")
+    title = "".join(i for i in title if ord(i)<128)
+    return title
+
+def fetch_imdb_title(url):
+    if not url:
+        return ''
+    page = urlopen(url).read()
     soup = BeautifulSoup(page, "lxml")
+    return soup.title.text.replace(" - IMDb", "")
+
+def fetch_releases(site):
+    url = ("https://hd-area.org/index.php?s=" + site)
+    page = urlopen(url).read()
+    soup = BeautifulSoup(page, "lxml")
+
+    season_re = re.compile(r".*S\d|\Sd{2}|eason\d|eason\d{2}.*")
+    quality_re = re.compile(str.join("|", quality))
 
     for release in soup.find_all("div", {"class" : "topbox"}):
         imdb_url = ""
+        imdb = re.search(r"(https?://(?:www\.)?imdb\.com/title/tt\d+/?)", str(release), re.I)
+        if imdb:
+            imdb_url = imdb.group(0)
+
         title = release.select_one("div.boxlinks > #title > a")["title"]
 
-        season = re.compile('.*S\d|\Sd{2}|eason\d|eason\d{2}.*')
-        if not season.match(title):
+        if re.search(quality_re, title) and not season_re.match(title):
 
             links = release.find_next("div", {"class" : "download"})
             links = links.select("div.beschreibung > span[style='display:inline;'] > a")
             for link in links:
                 url = link["href"]
                 if link.text.lower() in hoster:
-                    print("> " + title)
-                    print("  " + url + "\n")
-                    make_rss(title, url)
+                    imdb_title = fetch_imdb_title(imdb_url)
+                    imdb_title = replace_umlauts(imdb_title)
+                    if not imdb_title:
+                        imdb_title = title
+                    print("title:   " + imdb_title)
+                    print("release: " + title)
+                    print("imdb:    " + imdb_url)
+                    print("url:     " + url + "\n")
+                    make_rss(title, imdb_title, url)
 
 class HDAreaThread(threading.Thread):
     def __init__(self, site):
