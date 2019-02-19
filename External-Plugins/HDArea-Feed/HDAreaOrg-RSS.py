@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 # Einstellungen:
 quality = ["720p", "1080p"]
 sites = ["neues", "top-rls", "movies", "Old_Stuff", "Cinedubs"]
-hoster = ["share online", "uploaded"]
+hoster = ["share online", "share-online", "share-online.biz"]
 rssname = "HDArea.xml"
 
 # Skript startet hier:
